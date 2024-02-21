@@ -29,12 +29,12 @@
             <Button Background="DarkCyan" Click="EraseButton_Click">
                 <Image Source="C:\dineshn\Pictures\Erase.png"/>
             </Button>
-            <Button x:Name="undo" Background="DarkCyan" Width="25" Click="Undo_Click">
+            <Button x:Name="undo" Background="DarkCyan" Width="25" >
                 <Image Source="C:\dineshn\Pictures\undo.png"/>
             </Button>
-            <Button x:Name="redo" Background="DarkCyan" Width="25" Click="Button_Click">
-                 <Image Source="C:\dineshn\Pictures\redo.png"/>
-            </Button> 
+            <Button x:Name="redo" Background="DarkCyan" Width="25">
+                <Image Source="C:\dineshn\Pictures\redo.png"/>
+            </Button>
         </StackPanel>
         <local:MyCanvas  Grid.Row="1" x:Name="canvas" Background="White"/>
     </Grid>
