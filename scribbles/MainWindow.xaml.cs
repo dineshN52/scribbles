@@ -6,6 +6,7 @@ using System.Text;
 
 namespace scribbles {
 
+
    /// <summary>Interaction logic for MainWindow.xaml</summary>
    public partial class MainWindow : Window {
       readonly Microsoft.Win32.OpenFileDialog mOpen = new ();
@@ -29,40 +30,40 @@ namespace scribbles {
       }
 
       private void SaveAsTxt_Click (object sender, RoutedEventArgs e) {
-         StringBuilder newFile = new ();
-         foreach (var file in canvas.Strokes) {
-            foreach (var points in file)
-               newFile.AppendLine (points.ToString ());
-            _ = newFile.Append ('\n');
-         }
-         string fileText = newFile.ToString ();
-         SaveFileDialog dialog = new () {
-            Filter = "Text Files(*.txt)|*.txt|All(*.*)|*"
-         };
-         if (dialog.ShowDialog () == true)
-            File.WriteAllText (dialog.FileName, fileText);
+         //StringBuilder newFile = new ();
+         //foreach (var file in paintCanvas.Strokes) {
+         //   foreach (var points in file)
+         //      newFile.AppendLine (points.ToString ());
+         //   _ = newFile.Append ('\n');
+         //}
+         //string fileText = newFile.ToString ();
+         //SaveFileDialog dialog = new () {
+         //   Filter = "Text Files(*.txt)|*.txt|All(*.*)|*"
+         //};
+         //if (dialog.ShowDialog () == true)
+         //   File.WriteAllText (dialog.FileName, fileText);
       }
 
       private void SaveAsBin_Click (object sender, RoutedEventArgs e) {
-         SaveFileDialog dialog = new () {
-            Filter = "Binary Files(*.bin)|*.bin|All(*.*)|*"
-         };
-         if (dialog.ShowDialog () == true) {
-            using var s = File.OpenWrite (dialog.FileName);
-            var bw = new BinaryWriter (s);
-            foreach (var file in canvas.Strokes) {
-               foreach (var streak in file) {
-                  bw.Write (streak.X);
-                  bw.Write (streak.Y);
-                  bw.Write (default (byte));
-               }
-               bw.Write (Encoding.ASCII.GetBytes ("n"));
-            }
-         }
+         //SaveFileDialog dialog = new () {
+         //   Filter = "Binary Files(*.bin)|*.bin|All(*.*)|*"
+         //};
+         //if (dialog.ShowDialog () == true) {
+         //   using var s = File.OpenWrite (dialog.FileName);
+         //   var bw = new BinaryWriter (s);
+         //   foreach (var file in paintCanvas.Strokes) {
+         //      foreach (var streak in file) {
+         //         bw.Write (streak.X);
+         //         bw.Write (streak.Y);
+         //         bw.Write (default (byte));
+         //      }
+         //      bw.Write (Encoding.ASCII.GetBytes ("n"));
+         //   }
+         //}
       }
 
       private void Save_Click (object sender, RoutedEventArgs e) {
-
+         
       }
       private void MenuItem_Click (object sender, RoutedEventArgs e) {
          OpenFileDialog open = new ();
@@ -81,10 +82,14 @@ namespace scribbles {
          }
       }
 
-      private void EraseButton_Click (object sender, RoutedEventArgs e) => canvas.IsErase = canvas.IsErase != true;
+      private void EraseButton_Click (object sender, RoutedEventArgs e) => paintCanvas.IsErase = paintCanvas.IsErase != true;
 
-      //private void Undo_Click (object sender, RoutedEventArgs e) => canvas.Undo ();
+      private void Undo_Click (object sender, RoutedEventArgs e) => paintCanvas.Undo ();
 
-      //private void Button_Click (object sender, RoutedEventArgs e) => canvas.Redo ();
+      private void Redo_Click (object sender, RoutedEventArgs e) => paintCanvas.Redo ();
+
+      private void Rectangle_Click (object sender, RoutedEventArgs e) => paintCanvas.RectOn ();
+
+      private void scribble_Click (object sender, RoutedEventArgs e) => paintCanvas.ScribbleOn ();
    }
 }

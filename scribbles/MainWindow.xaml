@@ -1,4 +1,4 @@
-﻿<Window x:Class="scribbles.MainWindow"
+﻿<Window x:Name="main" x:Class="scribbles.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,13 +29,19 @@
             <Button Background="DarkCyan" Click="EraseButton_Click">
                 <Image Source="C:\dineshn\Pictures\Erase.png"/>
             </Button>
-            <Button x:Name="undo" Background="DarkCyan" Width="25" >
+            <Button x:Name="undo" Background="DarkCyan" Width="25" Click="Undo_Click">
                 <Image Source="C:\dineshn\Pictures\undo.png"/>
             </Button>
-            <Button x:Name="redo" Background="DarkCyan" Width="25">
+            <Button x:Name="redo" Background="DarkCyan" Width="25" Click="Redo_Click">
                 <Image Source="C:\dineshn\Pictures\redo.png"/>
             </Button>
+            <Button x:Name="scribble" Background="DarkCyan" Width="25" Click="scribble_Click">
+                <Image Source="C:\dineshn\Pictures\signature.png"/>
+            </Button>
+            <Button x:Name="Rectangle" Background="DarkCyan" Width="25" Click="Rectangle_Click">
+                <Image Source="C:\dineshn\Pictures\Rectangle.png"/>
+            </Button>
         </StackPanel>
-        <local:MyCanvas  Grid.Row="1" x:Name="canvas" Background="White"/>
+        <local:MyCanvas  Grid.Row="1" x:Name="paintCanvas" Background="White"/>
     </Grid>
 </Window>
