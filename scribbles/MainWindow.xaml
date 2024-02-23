@@ -20,7 +20,6 @@
                     <MenuItem Header="Save As">
                         <MenuItem Header="TEXT File" Click="SaveAsTxt_Click" />
                         <MenuItem Header="BINARY file" Click="SaveAsBin_Click"/>
-                        <MenuItem Header="ConvertBinTxt" Click="MenuItem_Click"/>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="Exit"  Click="Exit_Click"/>
@@ -40,6 +39,9 @@
             </Button>
             <Button x:Name="Rectangle" Background="DarkCyan" Width="25" Click="Rectangle_Click">
                 <Image Source="C:\dineshn\Pictures\Rectangle.png"/>
+            </Button>
+            <Button x:Name="Line" Background="DarkCyan" Width="25" Click="Line_Click">
+                <Image Source="C:\dineshn\Pictures\line.png"/>
             </Button>
         </StackPanel>
         <local:MyCanvas  Grid.Row="1" x:Name="paintCanvas" Background="White"/>
