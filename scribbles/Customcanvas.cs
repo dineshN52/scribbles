@@ -60,24 +60,31 @@ public partial class MyCanvas : Canvas {
                Rect r = new(rectangle.mStartpoint, rectangle.mEndPoint);
                dc.DrawRectangle (Background, rectangle.mPen, r);
                break;
+            case ConnectedLine:
+               ConnectedLine? Cline = shape as ConnectedLine;
+               for (int i = 0; i < Cline.mPoints.Count - 1; i++)
+                  dc.DrawLine (Cline.mPen, Cline.mPoints[i].Item1 , Cline.mPoints[i].Item2);
+               break;
          }
       }
    }
 
    protected override void OnMouseDown (MouseButtonEventArgs e) {
       base.OnMouseDown (e);
-      if (IsScribble && e.LeftButton == MouseButtonState.Pressed) {
-         mScr.mPoints.Add (e.GetPosition (this));
-      }
-      if (IsRect && e.LeftButton == MouseButtonState.Pressed) {
-         if(mRect.mStartpoint == default)
-            mRect.mStartpoint = e.GetPosition (this);
-         else {
-            mRect.mEndPoint = e.GetPosition (this);
-            mRect.mPen = new Pen (Brushes.Black, 1);
-            mShapes.Add (mRect);
-            mRect = new ();
-            InvalidateVisual ();
+      if(e.LeftButton == MouseButtonState.Pressed) {
+         if (IsScribble) {
+            mScr.mPoints.Add (e.GetPosition (this));
+         }
+         if (IsRect) {
+            if (mRect.mStartpoint == default)
+               mRect.mStartpoint = e.GetPosition (this);
+            else {
+               mRect.mEndPoint = e.GetPosition (this);
+               mRect.mPen = new Pen (Brushes.Black, 1);
+               mShapes.Add (mRect);
+               mRect = new ();
+               InvalidateVisual ();
+            }
          }
       }
    }
@@ -111,7 +118,7 @@ public partial class MyCanvas : Canvas {
             mLine = new ();
             InvalidateVisual ();
          }
-      }
+      }     
    }
 
    public void Undo () {

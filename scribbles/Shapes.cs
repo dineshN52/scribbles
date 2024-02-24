@@ -53,5 +53,6 @@ public class CustomRectangle : Shapes {
    }
 }
 public class ConnectedLine : Shapes {
+   public List<(Point,Point )> mPoints { get; set; }
 
 }

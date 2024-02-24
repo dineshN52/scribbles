@@ -43,6 +43,9 @@
             <Button x:Name="Line" Background="DarkCyan" Width="25" Click="Line_Click">
                 <Image Source="C:\dineshn\Pictures\line.png"/>
             </Button>
+            <Button x:Name="ConnectedLine" Background="DarkCyan" Width="25" Click="ConnectedLine_Click">
+                <Image Source="C:\dineshn\Pictures\connectedline.png "/>
+            </Button>
         </StackPanel>
         <local:MyCanvas  Grid.Row="1" x:Name="paintCanvas" Background="White"/>
     </Grid>

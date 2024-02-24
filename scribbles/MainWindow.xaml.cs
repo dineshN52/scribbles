@@ -96,5 +96,7 @@ namespace scribbles {
       private void scribble_Click (object sender, RoutedEventArgs e) => paintCanvas.ScribbleOn ();
 
       private void Line_Click (object sender, RoutedEventArgs e) => paintCanvas.LineOn ();
+
+      private void ConnectedLine_Click (object sender, RoutedEventArgs e) => paintCanvas.ConnectedLineOn ();
    }
 }
