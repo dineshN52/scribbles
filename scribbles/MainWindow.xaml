@@ -15,7 +15,10 @@
             <Menu MinHeight="20" Background="DarkCyan">
                 <MenuItem Header="_File" Margin="3">
                     <MenuItem Header="_New" Click="NewWindow_Click"/>
-                    <MenuItem Header="Open" Click="OpenFile_Click"/>
+                    <MenuItem Header="Open">
+                        <MenuItem Header="Text file" Click="TextOpen_Click"/>
+                        <MenuItem Header="Binary file" Click="BinaryOpen_Click"/>
+                    </MenuItem>
                     <MenuItem Header="Save" Click="Save_Click"/>
                     <MenuItem Header="Save As">
                         <MenuItem Header="TEXT File" Click="SaveAsTxt_Click" />

@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows;
 using System.Text;
+using System.Windows.Shapes;
 
 namespace Scribbles;
 
@@ -53,6 +54,12 @@ public class CustomRectangle : Shapes {
    }
 }
 public class ConnectedLine : Shapes {
-   public List<(Point,Point )> mPoints { get; set; }
+   public List<Line> mPoints { get; set; }
+
+   public Line mLine { get; set; }
+}
+public struct Line {
+   public Point mStartpoint { get; set; }
+   public Point mEndpoint { get; set; }
 
 }
