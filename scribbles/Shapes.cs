@@ -16,8 +16,8 @@ public class Scribble : Shapes {
    public override string ToString () {
       StringBuilder s = new ();
       s.AppendLine ("Scribble");
-      s.AppendLine (mPen.Brush.ToString());
-      s.AppendLine (mPen.Thickness.ToString());
+      s.AppendLine (mPen.Brush.ToString ());
+      s.AppendLine (mPen.Thickness.ToString ());
       s.AppendLine (mPoints.Count.ToString ());
       foreach (var p in mPoints)
          s.AppendLine (p.ToString ());
@@ -57,9 +57,4 @@ public class ConnectedLine : Shapes {
    public List<Line> mPoints { get; set; }
 
    public Line mLine { get; set; }
-}
-public struct Line {
-   public Point mStartpoint { get; set; }
-   public Point mEndpoint { get; set; }
-
 }
