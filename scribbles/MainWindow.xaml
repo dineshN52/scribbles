@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:scribbles"
         mc:Ignorable="d"
         Title="scribble" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="Btnstyle" TargetType="Button">
+            <Setter Property="Background" Value="DarkCyan"/>
+            <Setter Property="Width" Value="25"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="25" MaxHeight="25"/>
@@ -14,40 +20,74 @@
         <StackPanel Orientation="Horizontal" Background="DarkCyan">
             <Menu MinHeight="20" Background="DarkCyan">
                 <MenuItem Header="_File" Margin="3">
-                    <MenuItem Header="_New" Click="NewWindow_Click"/>
-                    <MenuItem Header="Open">
-                        <MenuItem Header="Text file" Click="TextOpen_Click"/>
-                        <MenuItem Header="Binary file" Click="BinaryOpen_Click"/>
+                    <MenuItem Header="_New" x:Name="Newfile" Click="NewWindow_Click">
+                        <MenuItem.Icon>
+                            <Image Source="C:\dineshn\scribbles\Pictures\newfile.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save" Click="Save_Click"/>
+                    <MenuItem Header="Open">
+                        <MenuItem.Icon>
+                            <Image Source="C:\dineshn\scribbles\Pictures\openfile.png"/>
+                        </MenuItem.Icon>
+                        <MenuItem Header="TEXT file" Click="TextOpen_Click">
+                            <MenuItem.Icon>
+                                <Image Source="C:\dineshn\scribbles\Pictures\txtfile.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="BINARY file" Click="BinaryOpen_Click">
+                            <MenuItem.Icon>
+                                <Image Source="C:\dineshn\scribbles\Pictures\binfile.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Save" Click="Save_Click">
+                        <MenuItem.Icon>
+                            <Image Source="C:\dineshn\scribbles\Pictures\saveas.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="Save As">
-                        <MenuItem Header="TEXT File" Click="SaveAsTxt_Click" />
-                        <MenuItem Header="BINARY file" Click="SaveAsBin_Click"/>
+                        <MenuItem.Icon>
+                            <Image Source="C:\dineshn\scribbles\Pictures\saveas.png"/>
+                        </MenuItem.Icon>
+                        <MenuItem Header="TEXT File" Click="SaveAsTxt_Click">
+                            <MenuItem.Icon>
+                                <Image Source="C:\dineshn\scribbles\Pictures\txtfile.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="BINARY file" Click="SaveAsBin_Click">
+                            <MenuItem.Icon>
+                                <Image Source="C:\dineshn\scribbles\Pictures\binfile.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="Exit"  Click="Exit_Click"/>
+                    <MenuItem Header="Exit"  Click="Exit_Click">
+                        <MenuItem.Icon>
+                            <Image Source="C:\dineshn\scribbles\Pictures\exit.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
-            <Button Background="DarkCyan" Click="EraseButton_Click">
-                <Image Source="C:\dineshn\Pictures\Erase.png"/>
+            <Button Style="{StaticResource Btnstyle}" Click="EraseButton_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\Erase.png"/>
             </Button>
-            <Button x:Name="undo" Background="DarkCyan" Width="25" Click="Undo_Click">
-                <Image Source="C:\dineshn\Pictures\undo.png"/>
+            <Button x:Name="undo" Style="{StaticResource Btnstyle}" Click="Undo_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\undo.png"/>
             </Button>
-            <Button x:Name="redo" Background="DarkCyan" Width="25" Click="Redo_Click">
-                <Image Source="C:\dineshn\Pictures\redo.png"/>
+            <Button x:Name="redo" Style="{StaticResource Btnstyle}" Click="Redo_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\redo.png"/>
             </Button>
-            <Button x:Name="scribble" Background="DarkCyan" Width="25" Click="scribble_Click">
-                <Image Source="C:\dineshn\Pictures\signature.png"/>
+            <Button x:Name="scribble" Style="{StaticResource Btnstyle}" Click="scribble_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\signature.png"/>
             </Button>
-            <Button x:Name="Rectangle" Background="DarkCyan" Width="25" Click="Rectangle_Click">
-                <Image Source="C:\dineshn\Pictures\Rectangle.png"/>
+            <Button x:Name="Rectangle" Style="{StaticResource Btnstyle}" Click="Rectangle_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\Rectangle.png"/>
             </Button>
-            <Button x:Name="Line" Background="DarkCyan" Width="25" Click="Line_Click">
-                <Image Source="C:\dineshn\Pictures\line.png"/>
+            <Button x:Name="Line" Style="{StaticResource Btnstyle}" Click="Line_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\line.png"/>
             </Button>
-            <Button x:Name="ConnectedLine" Background="DarkCyan" Width="25" Click="ConnectedLine_Click">
-                <Image Source="C:\dineshn\Pictures\connectedline.png "/>
+            <Button x:Name="ConnectedLine" Style="{StaticResource Btnstyle}" Click="ConnectedLine_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\cline.png "/>
             </Button>
         </StackPanel>
         <local:MyCanvas  Grid.Row="1" x:Name="paintCanvas" Background="White"/>
