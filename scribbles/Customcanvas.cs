@@ -10,8 +10,7 @@ namespace scribbles;
 
 public partial class MyCanvas : Canvas {
 
-   public List<Shapes> AllShapes => mShapes;
-
+   #region Methods-------
    public void ScribbleOn () => mCurrentShape = new Scribble ();
 
    public void LineOn () => mCurrentShape = new CustomLine ();
@@ -20,8 +19,36 @@ public partial class MyCanvas : Canvas {
 
    public void CircleOn () => mCurrentShape = new CustomCircle ();
 
+   public void Undo () {
+      if (mShapes.Count == 0) return;
+      mUndoShapes.Push (mShapes.Last ());
+      mShapes.RemoveAt (mShapes.Count - 1);
+      InvalidateVisual ();
+   }
+
+   public void Redo () {
+      if (mUndoShapes.Count == 0) return;
+      mShapes.Add (mUndoShapes.Pop ());
+      InvalidateVisual ();
+   }
+
+   public void OpenDocument (FileManager file) {
+      mShapes.Clear ();
+      try {
+         mShapes = file.OpenFile ();
+         IsNewfile = false;
+         InvalidateVisual ();
+      } catch (Exception e) {
+         MessageBox.Show (e.Message);
+      }
+   }
+   #endregion
+
+   #region Overrides----------
    protected override void OnRender (DrawingContext dc) {
       base.OnRender (dc);
+      Currentcanvas.canvas.AllShapes = mShapes;
+      Currentcanvas.canvas.IsNewfile = IsNewfile;
       foreach (var shape in mShapes) {
          switch (shape) {
             case Scribble scr:
@@ -90,12 +117,12 @@ public partial class MyCanvas : Canvas {
                break;
          }
       }
-
    }
 
    protected override void OnMouseMove (MouseEventArgs e) {
       base.OnMouseMove (e);
       if (e.LeftButton != MouseButtonState.Pressed) return;
+      IsModified = true;
       switch (mCurrentShape) {
          case Scribble sr:
             sr.Points.Add (new CustomPoint (e.GetPosition (this).X, e.GetPosition (this).Y));
@@ -131,30 +158,17 @@ public partial class MyCanvas : Canvas {
             mCurrentShape = new CustomCircle (); break;
       }
    }
+   #endregion
 
-   public void Undo () {
-      if (mShapes.Count == 0) return;
-      mUndoShapes.Push (mShapes.Last ());
-      mShapes.RemoveAt (mShapes.Count - 1);
-      InvalidateVisual ();
-   }
+   #region Fields---------
+   public List<Shapes> AllShapes { get { return mShapes; } set { mShapes = value; } }
+   #endregion
 
-   public void Redo () {
-      if (mUndoShapes.Count == 0) return;
-      mShapes.Add (mUndoShapes.Pop ());
-      InvalidateVisual ();
-   }
-
-   public void OpenDocument () {
-      mShapes.Clear ();
-      mShapes = FileManager.OpenFile ();
-      InvalidateVisual ();
-   }
-
-   #region Private data--------
+   #region Data--------
    public Shapes mCurrentShape = new Scribble ();
    private List<Shapes> mShapes = new ();
    private Stack<Shapes> mUndoShapes = new ();
-   public string? mShapeColor = Colors.ShapeColor;
+   public bool IsModified = false;
+   public bool IsNewfile = true;
    #endregion 
 }

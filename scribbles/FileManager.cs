@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace scribbles;
@@ -12,18 +11,16 @@ public class FileManager {
 
    public FileManager () { }
 
-   public static List<Shapes> OpenFile () {
-      OpenFileDialog open = new () {
-         Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin"
-      };
+   #region Methods-----------
+   public List<Shapes> OpenFile () {
       List<Shapes> shapes = new ();
       if (open.ShowDialog () == true) {
-         char[] l = open.FileName.TakeLast (3).ToArray ();
-         string s = string.Join ("", l);
-         if (s.Equals ("txt")) {
+         int i = open.FilterIndex;
+         if (i==1) {
             string[] allShapes = File.ReadAllLines (open.FileName);
+            if (allShapes[0] is not "Scribble" or "CustomRectangle" or "CustomLine" or "CustomCircle") throw new FormatException ("Input is not in correct format");
             shapes = Open (allShapes);
-         } else {
+         } else if (i==2) {
             byte[] allBytes = File.ReadAllBytes (open.FileName);
             shapes = Open (allBytes);
          }
@@ -91,10 +88,10 @@ public class FileManager {
             case 1:
                byte[] count = new byte[4];
                Array.Copy (allBytes, i + 15, count, 0, 4);
-               Scribble scr = new ();
-               string ss = System.Text.Encoding.Default.GetString (color);
-               scr.color = ss;
-               scr.Thickness = BitConverter.ToInt32 (thickness, 0);
+               Scribble scr = new () {
+                  color = System.Text.Encoding.Default.GetString (color),
+                  Thickness = BitConverter.ToInt32 (thickness, 0)
+               };
                limits = (limits + 19) + (BitConverter.ToInt32 (count, 0) * 16);
                for (int j = i + 19; j < limits; j += 16) {
                   byte[] x = new byte[8]; byte[] y = new byte[8];
@@ -106,11 +103,11 @@ public class FileManager {
                all.Add (scr);
                break;
             case 2:
-               CustomLine line = new ();
-               string ls = System.Text.Encoding.Default.GetString (color);
-               line.color = ls;
+               CustomLine line = new () {
+                  color = System.Text.Encoding.Default.GetString (color),
+                  Thickness = BitConverter.ToInt32 (thickness, 0)
+               };
                limits += 47;
-               line.Thickness = BitConverter.ToInt32 (thickness, 0);
                for (int j = i + 15; j < limits; j += 32) {
                   byte[] x1 = new byte[8]; byte[] y1 = new byte[8]; byte[] x2 = new byte[8]; byte[] y2 = new byte[8];
                   Array.Copy (allBytes, j, x1, 0, 8);
@@ -124,12 +121,12 @@ public class FileManager {
                all.Add (line);
                break;
             case 3:
-               CustomRectangle rect = new ();
-               string rs = System.Text.Encoding.Default.GetString (color);
-               rect.color = rs;
+               CustomRectangle rect = new () {
+                  color = System.Text.Encoding.Default.GetString (color),
+                  Thickness = BitConverter.ToInt32 (thickness, 0)
+               };
                limits += 47;
                for (int j = i + 15; j < limits; j += 32) {
-                  rect.Thickness = BitConverter.ToInt32 (thickness, 0);
                   byte[] startX = new byte[8]; byte[] startY = new byte[8]; byte[] endX = new byte[8]; byte[] endY = new byte[8];
                   Array.Copy (allBytes, j, startX, 0, 8);
                   Array.Copy (allBytes, j + 8, startY, 0, 8);
@@ -142,12 +139,12 @@ public class FileManager {
                all.Add (rect);
                break;
             case 4:
-               CustomCircle circle = new ();
-               string cs = System.Text.Encoding.Default.GetString (color);
-               circle.color = cs;
-               limits += 47;
-               for (int j = i + 15; j < limits; j += 32) {
-                  circle.Thickness = BitConverter.ToInt32 (thickness, 0);
+               CustomCircle circle = new () {
+                  color = System.Text.Encoding.Default.GetString (color),
+                  Thickness = BitConverter.ToInt32 (thickness, 0)
+               };
+               limits += 39;
+               for (int j = i + 15; j < limits; j += 24) {
                   byte[] centreX = new byte[8]; byte[] centreY = new byte[8]; byte[] radius = new byte[8];
                   Array.Copy (allBytes, j, centreX, 0, 8);
                   Array.Copy (allBytes, j + 8, centreY, 0, 8);
@@ -163,9 +160,10 @@ public class FileManager {
       return all;
    }
 
-   public static void SaveAs (List<Shapes> allShapes, bool IsText) {
+   public bool SaveAs (List<Shapes> allShapes, bool IsText) {
       SaveFileDialog dialog = new () {
-         Filter = IsText ? "Text Files(*.txt)|*.txt|All(*.*)|*" : "BIN Files(*.bin)|*.bin|All(*.*)|*"
+         Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin|All(*.*)|*",
+         DefaultExt = IsText ? "*.txt" : "*.bin"
       };
       if (dialog.ShowDialog () == true) {
          if (IsText) {
@@ -173,13 +171,16 @@ public class FileManager {
             foreach (var file in allShapes)
                newFile.Append (file.ToString ());
             File.WriteAllText (dialog.FileName, newFile.ToString ());
+            return true;
          } else {
             using (FileStream fs = new (dialog.FileName, FileMode.Create)) {
                BinaryWriter bw = new (fs);
                bw = BinaryWrite (ref bw, allShapes);
             }
+            return true;
          }
       }
+      return false;
    }
 
    private static BinaryWriter BinaryWrite (ref BinaryWriter bw, List<Shapes> allShapes) {
@@ -234,20 +235,51 @@ public class FileManager {
       return bw;
    }
 
-   //public void Save(List<Shapes> allShapes) {
-   //   bool IsText = false;
-   //   if (open != null) {
-   //      string ext = open.DefaultExt;
-   //      if (ext == "txt") {
+   public void SaveUntitled (List<Shapes> shapes) {
+      SaveFileDialog dialog = new () {
+         FileName = "Untitled",
+         Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin|All(*.*)|*",
+      };
+      StringBuilder newFile = new ();
+      dialog.InitialDirectory = "C:\\dineshn";
+      if (dialog.ShowDialog () == true) {
+         if (dialog.FilterIndex == 1) {
+            foreach (var file in shapes)
+               newFile.Append (file.ToString ());
+            File.WriteAllText (dialog.FileName, newFile.ToString ());
+         } else if (dialog.FilterIndex == 2) {
+            using (FileStream fs = new (dialog.FileName, FileMode.Create)) {
+               BinaryWriter bw = new (fs);
+               bw = BinaryWrite (ref bw, shapes);
+            }
+         }
+      }
+   }
 
-   //         StringBuilder newFile = new ();
-   //         foreach (var file in allShapes)
-   //            newFile.Append (file.ToString ());
-   //         File.WriteAllText (open.FileName, newFile.ToString ());
-   //      } else {
-   //      }
-   //   } else
-   //      SaveAs (allShapes, IsText);
-   //}
+   public void Save (List<Shapes> allShapes) {
+      if (open != null) {
+         int i = open.FilterIndex;
+         if (i == 1) {
+            File.WriteAllText (open.FileName, string.Empty);
+            StringBuilder newFile = new ();
+            foreach (var file in allShapes)
+               newFile.Append (file.ToString ());
+            File.WriteAllText (open.FileName, newFile.ToString ());
+         } else {
+            using (FileStream fs = new (open.FileName, FileMode.Create)) {
 
+               BinaryWriter bw = new (fs);
+               bw.Flush ();
+               bw = BinaryWrite (ref bw, allShapes);
+            }
+         }
+      }
+   }
+   #endregion 
+
+   #region Private-----------
+   OpenFileDialog open = new () {
+      Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin"
+   };
+   #endregion 
 }

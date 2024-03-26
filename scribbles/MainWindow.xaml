@@ -5,19 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:scribbles"
         mc:Ignorable="d"
-        Title="scribble" Height="450" Width="800">
+        Title="scribble" Height="450" Width="800"
+        WindowStyle="None">
     <Window.Resources>
         <Style x:Key="Btnstyle" TargetType="Button">
             <Setter Property="Background" Value="DarkCyan"/>
             <Setter Property="Width" Value="25"/>
         </Style>
+        <Style x:Key="style1" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="MaxHeight" Value="15"/>
+            <Setter Property="MinHeight" Value="15"/>
+            <Setter Property="MaxWidth" Value="20"/>
+            <Setter Property="MinWidth" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition MinHeight="20" MaxHeight="20"/>
             <RowDefinition MinHeight="25" MaxHeight="25"/>
             <RowDefinition MinHeight="425"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="DarkCyan">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button x:Name="Minimize" Style="{StaticResource style1}" Click="Minimize_Click">
+                <Image Source="C:\dineshn\scribbles\Pictures\minimize.png"/>
+            </Button>
+            <Button x:Name="Maximize" Style="{StaticResource style1}" Click="Maximize_Click">
+                <Image Source=" C:\dineshn\scribbles\Pictures\maimize.png"/>
+            </Button>
+
+            <Button x:Name="CloseButton" MaxWidth="20" MinWidth="20" Height="16" BorderThickness="0.5" Background="Red">
+                <Image Source="C:\dineshn\scribbles\Pictures\cross1.png"/>
+            </Button>
+
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="DarkCyan">
             <Menu MinHeight="20" Background="DarkCyan">
                 <MenuItem Header="_File" Margin="3">
                     <MenuItem Header="_New" x:Name="Newfile" Click="NewWindow_Click">
@@ -80,6 +106,8 @@
                 <Image Source="C:\dineshn\scribbles\Pictures\colors.png"/>
             </Button>
         </StackPanel>
-        <local:MyCanvas  Grid.Row="1" x:Name="paintCanvas" Background="Transparent"/>
+        <local:MyCanvas  Grid.Row="2" x:Name="paintCanvas" Background="Transparent"/>
     </Grid>
+
+
 </Window>

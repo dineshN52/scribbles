@@ -86,7 +86,6 @@ public struct CustomPoint {
       f = new CustomPoint ();
       if (input.Length <= 0) return false;
       string[] points = input.Split (',');
-      if (points.Length != 2) return false;
       if (points.Length == 2) {
          f = new (double.Parse (points[0]), double.Parse (points[1]));
          return true;
