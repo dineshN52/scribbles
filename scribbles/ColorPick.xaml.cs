@@ -1,16 +1,17 @@
 ﻿using System.Windows;
+using BackEnd;
 
 namespace scribbles {
-   /// <summary>Interaction logic for Sub.xaml</summary>
-   public partial class Sub : Window {
+   /// <summary>Interaction logic for ColorPick.xaml</summary>
+   public partial class ColorPick : Window {
 
-      #region Constructor-------
-      public Sub () {
+      #region Constructor------
+      public ColorPick () {
          InitializeComponent ();
       }
       #endregion
 
-      #region Methods---------
+      #region Methods----------
       private void Red_Click (object sender, RoutedEventArgs e) { Colors.ShapeColor = "#FF0000"; Close (); }
 
       private void Black_Click (object sender, RoutedEventArgs e) { Colors.ShapeColor = "#000000"; Close (); }
@@ -24,4 +25,5 @@ namespace scribbles {
       private void Yellow_Click (object sender, RoutedEventArgs e) { Colors.ShapeColor = "#FFFF00"; Close (); }
       #endregion
    }
+
 }

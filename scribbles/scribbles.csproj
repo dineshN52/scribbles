@@ -7,4 +7,48 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Icons\binfile.png" />
+    <None Remove="Icons\circle1.png" />
+    <None Remove="Icons\colors.png" />
+    <None Remove="Icons\Erase.png" />
+    <None Remove="Icons\exit.png" />
+    <None Remove="Icons\line.png" />
+    <None Remove="Icons\maximize.png" />
+    <None Remove="Icons\minimize.png" />
+    <None Remove="Icons\newfile.png" />
+    <None Remove="Icons\openfile.png" />
+    <None Remove="Icons\rectangle.png" />
+    <None Remove="Icons\redo.png" />
+    <None Remove="Icons\saveas.png" />
+    <None Remove="Icons\scribble.png" />
+    <None Remove="Icons\signature.png" />
+    <None Remove="Icons\txtfile.png" />
+    <None Remove="Icons\undo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\binfile.png" />
+    <EmbeddedResource Include="Icons\circle1.png" />
+    <EmbeddedResource Include="Icons\colors.png" />
+    <EmbeddedResource Include="Icons\Erase.png" />
+    <EmbeddedResource Include="Icons\exit.png" />
+    <EmbeddedResource Include="Icons\line.png" />
+    <EmbeddedResource Include="Icons\maximize.png" />
+    <EmbeddedResource Include="Icons\minimize.png" />
+    <EmbeddedResource Include="Icons\newfile.png" />
+    <EmbeddedResource Include="Icons\openfile.png" />
+    <EmbeddedResource Include="Icons\rectangle.png" />
+    <EmbeddedResource Include="Icons\redo.png" />
+    <EmbeddedResource Include="Icons\saveas.png" />
+    <EmbeddedResource Include="Icons\scribble.png" />
+    <EmbeddedResource Include="Icons\signature.png" />
+    <EmbeddedResource Include="Icons\txtfile.png" />
+    <EmbeddedResource Include="Icons\undo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BackEnd\BackEnd.csproj" />
+  </ItemGroup>
+
 </Project>

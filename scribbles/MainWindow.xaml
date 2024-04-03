@@ -5,109 +5,85 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:scribbles"
         mc:Ignorable="d"
-        Title="scribble" Height="450" Width="800"
-        WindowStyle="None">
+        Title="scribble" Height="450" WindowState="Maximized" Width="800"  Icon="C:\dineshn\scribbles\scribbles\Icons\scribble.png">
     <Window.Resources>
         <Style x:Key="Btnstyle" TargetType="Button">
-            <Setter Property="Background" Value="DarkCyan"/>
-            <Setter Property="Width" Value="25"/>
-        </Style>
-        <Style x:Key="style1" TargetType="Button">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="MaxHeight" Value="15"/>
-            <Setter Property="MinHeight" Value="15"/>
-            <Setter Property="MaxWidth" Value="20"/>
-            <Setter Property="MinWidth" Value="20"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="MaxWidth" Value="40"/>
+            <Setter Property="MinWidth" Value="25"/>
+            <Setter Property="BorderThickness" Value="0.1"/>
         </Style>
     </Window.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="20" MaxHeight="20"/>
-            <RowDefinition MinHeight="25" MaxHeight="25"/>
+            <RowDefinition MinHeight="25" MaxHeight="45"/>
             <RowDefinition MinHeight="425"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-            <Button x:Name="Minimize" Style="{StaticResource style1}" Click="Minimize_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\minimize.png"/>
-            </Button>
-            <Button x:Name="Maximize" Style="{StaticResource style1}" Click="Maximize_Click">
-                <Image Source=" C:\dineshn\scribbles\Pictures\maimize.png"/>
-            </Button>
-
-            <Button x:Name="CloseButton" MaxWidth="20" MinWidth="20" Height="16" BorderThickness="0.5" Background="Red">
-                <Image Source="C:\dineshn\scribbles\Pictures\cross1.png"/>
-            </Button>
-
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="DarkCyan">
-            <Menu MinHeight="20" Background="DarkCyan">
-                <MenuItem Header="_File" Margin="3">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="DarkCyan">
+            <Menu MinHeight="20" VerticalAlignment="Center" Background="DarkCyan">
+                <MenuItem VerticalAlignment="Center" Header="_File" MaxHeight="25" Margin="3">
                     <MenuItem Header="_New" x:Name="Newfile" Click="NewWindow_Click">
                         <MenuItem.Icon>
-                            <Image Source="C:\dineshn\scribbles\Pictures\newfile.png"/>
+                            <Image Source="C:\dineshn\scribbles\scribbles\Icons\newfile.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Open" Click="Open_Click">
                         <MenuItem.Icon>
-                            <Image Source="C:\dineshn\scribbles\Pictures\openfile.png"/>
+                            <Image Source="C:\dineshn\scribbles\scribbles\Icons\openfile.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Save" Click="Save_Click">
                         <MenuItem.Icon>
-                            <Image Source="C:\dineshn\scribbles\Pictures\saveas.png"/>
+                            <Image Source="C:\dineshn\scribbles\scribbles\Icons\saveas.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Save As">
                         <MenuItem.Icon>
-                            <Image Source="C:\dineshn\scribbles\Pictures\saveas.png"/>
+                            <Image Source="C:\dineshn\scribbles\scribbles\Icons\saveas.png"/>
                         </MenuItem.Icon>
                         <MenuItem Header="TEXT File" Click="SaveAsTxt_Click">
                             <MenuItem.Icon>
-                                <Image Source="C:\dineshn\scribbles\Pictures\txtfile.png"/>
+                                <Image Source="C:\dineshn\scribbles\scribbles\Icons\txtfile.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="BINARY file" Click="SaveAsBin_Click">
                             <MenuItem.Icon>
-                                <Image Source="C:\dineshn\scribbles\Pictures\binfile.png"/>
+                                <Image Source="C:\dineshn\scribbles\scribbles\Icons\binfile.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="Exit"  Click="Exit_Click">
                         <MenuItem.Icon>
-                            <Image Source="C:\dineshn\scribbles\Pictures\exit.png"/>
+                            <Image Source="C:\dineshn\scribbles\scribbles\Icons\exit.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
-            <Button x:Name="undo" Style="{StaticResource Btnstyle}" Click="Undo_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\undo.png"/>
+            <Button x:Name="undo" Style="{StaticResource Btnstyle}" Click="Undo_Click" ToolTip="Undo" IsEnabled="False">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\undo.png"/>
             </Button>
-            <Button x:Name="redo" Style="{StaticResource Btnstyle}" Click="Redo_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\redo.png"/>
+            <Button x:Name="redo" Style="{StaticResource Btnstyle}" Click="Redo_Click" ToolTip="Redo" IsEnabled="False">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\redo.png"/>
             </Button>
-            <Button x:Name="scribble" Style="{StaticResource Btnstyle}" Click="scribble_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\signature.png"/>
+            <Button x:Name="scribble" Style="{StaticResource Btnstyle}" Click="scribble_Click" ToolTip="DrawScribble">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\signature.png"/>
             </Button>
-            <Button x:Name="Rectangle" Style="{StaticResource Btnstyle}" Click="Rectangle_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\Rectangle.png"/>
+            <Button x:Name="Rectangle" Style="{StaticResource Btnstyle}" Click="Rectangle_Click" ToolTip="DrawRectangle">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\rectangle.png" />
             </Button>
-            <Button x:Name="Line" Style="{StaticResource Btnstyle}" Click="Line_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\line.png"/>
+            <Button x:Name="Line" Style="{StaticResource Btnstyle}" Click="Line_Click" ToolTip="DrawLine">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\line.png"/>
             </Button>
-            <Button x:Name="Circle" Style="{StaticResource Btnstyle}" Click="Circle_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\circle1.png"/>
+            <Button x:Name="Circle" Style="{StaticResource Btnstyle}" Click="Circle_Click" ToolTip="DrawCircle">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\circle1.png"/>
             </Button>
-            <Button x:Name="Color" Style="{StaticResource Btnstyle}" Click="Color_Click">
-                <Image Source="C:\dineshn\scribbles\Pictures\colors.png"/>
+            <Slider Minimum="1" Maximum="3" Height="30" Width="150" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Name="slValue" ToolTip="ShapeThickness"/>
+            <TextBox x:Name="ThciknessVal" Text="{Binding ElementName=slValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" Width="30" Height="20" TextChanged="ThciknessVal_TextChanged" ToolTip="ShapeThickness"/>
+            <Button x:Name="Color" Style="{StaticResource Btnstyle}" Click="Color_Click" ToolTip="ColorPicker">
+                <Image Source="C:\dineshn\scribbles\scribbles\Icons\colors.png"/>
             </Button>
         </StackPanel>
-        <local:MyCanvas  Grid.Row="2" x:Name="paintCanvas" Background="Transparent"/>
+        <local:MyCanvas Grid.Row="1"  x:Name="paintCanvas" Background="Transparent"/>
     </Grid>
-
-
 </Window>

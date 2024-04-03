@@ -2,30 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
-namespace scribbles;
+namespace BackEnd;
 
 /// <summary>Class to manage opening and saving of the files(Text and Binary files)</summary>
 public class FileManager {
 
-   public FileManager () { }
-
-   #region Methods-----------
-   public List<Shapes> OpenFile () {
-      List<Shapes> shapes = new ();
+   #region Methods-------------
+   public bool OpenFile (out List<Shapes> f) {
+      OpenFileDialog open = new () {
+         Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin",
+      };
+      f = new List<Shapes> ();
       if (open.ShowDialog () == true) {
          int i = open.FilterIndex;
-         if (i==1) {
+         if (i == 1) {
             string[] allShapes = File.ReadAllLines (open.FileName);
-            if (allShapes[0] is not "Scribble" or "CustomRectangle" or "CustomLine" or "CustomCircle") throw new FormatException ("Input is not in correct format");
-            shapes = Open (allShapes);
-         } else if (i==2) {
+            if (allShapes[0] == "Scribble" || allShapes[0] == "Rectangle" || allShapes[0] == "Line" || allShapes[0] == "Circle") f = Open (allShapes);
+            else throw new FormatException ("Input is not in correct format");
+         } else if (i == 2) {
             byte[] allBytes = File.ReadAllBytes (open.FileName);
-            shapes = Open (allBytes);
+            f = Open (allBytes);
          }
+         mCurrentFileName = open.FileName;
+         return true;
       }
-      return shapes;
+      return false;
    }
 
    private static List<Shapes> Open (string[] allShapes) {
@@ -36,38 +40,38 @@ public class FileManager {
          switch (s) {
             case "Scribble":
                Scribble sr = new () {
-                  color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
+                  Color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
                };
                limits = (limits + 4) + int.Parse (allShapes[i + 3]);
                for (int j = i + 4; j < limits; j++)
-                  sr.Points.Add (CustomPoint.Parse (allShapes[j]));
+                  sr.Points.Add (Point.Parse (allShapes[j]));
                all.Add (sr);
                break;
-            case "CustomLine":
-               CustomLine line = new () {
-                  color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
+            case "Line":
+               Line line = new () {
+                  Color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
                };
                limits += 5;
-               line.X = CustomPoint.Parse (allShapes[i + 3]);
-               line.Y = CustomPoint.Parse (allShapes[i + 4]);
+               line.Points.Add (Point.Parse (allShapes[i + 3]));
+               line.Points.Add (Point.Parse (allShapes[i + 4]));
                all.Add (line);
                break;
-            case "CustomRectangle":
-               CustomRectangle rect = new () {
-                  color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
+            case "Rectangle":
+               Rectangle rect = new () {
+                  Color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
                };
                limits += 5;
-               rect.mStartpoint = CustomPoint.Parse (allShapes[i + 3]);
-               rect.mEndPoint = CustomPoint.Parse (allShapes[i + 4]);
+               rect.Points.Add (Point.Parse (allShapes[i + 3]));
+               rect.Points.Add (Point.Parse (allShapes[i + 4]));
                all.Add (rect);
                break;
-            case "CustomCircle":
-               CustomCircle circle = new () {
-                  color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
+            case "Circle":
+               Circle circle = new () {
+                  Color = allShapes[i + 1], Thickness = int.Parse (allShapes[i + 2])
                };
                limits += 5;
-               circle.centre = CustomPoint.Parse (allShapes[i + 3]);
-               circle.radius = double.Parse (allShapes[i + 4]);
+               circle.Points.Add (Point.Parse (allShapes[i + 3]));
+               circle.Radius = double.Parse (allShapes[i + 4]);
                all.Add (circle);
                break;
          }
@@ -81,86 +85,88 @@ public class FileManager {
       for (int i = 0; i < allBytes.Length; i = limits) {
          byte[] shape = new byte[4]; byte[] color = new byte[7]; byte[] thickness = new byte[4];
          Array.Copy (allBytes, i, shape, 0, 4);
-         Array.Copy (allBytes, i + 4, color, 0, 7);
-         Array.Copy (allBytes, i + 11, thickness, 0, 4);
+         Array.Copy (allBytes, i + 5, color, 0, 7);
+         Array.Copy (allBytes, i + 12, thickness, 0, 4);
          int s = BitConverter.ToInt32 (shape, 0);
          switch (s) {
             case 1:
                byte[] count = new byte[4];
-               Array.Copy (allBytes, i + 15, count, 0, 4);
+               Array.Copy (allBytes, i + 16, count, 0, 4);
                Scribble scr = new () {
-                  color = System.Text.Encoding.Default.GetString (color),
+                  Color = Encoding.Default.GetString (color),
                   Thickness = BitConverter.ToInt32 (thickness, 0)
                };
-               limits = (limits + 19) + (BitConverter.ToInt32 (count, 0) * 16);
-               for (int j = i + 19; j < limits; j += 16) {
+               limits = (limits + 20) + (BitConverter.ToInt32 (count, 0) * 16);
+               for (int j = i + 20; j < limits; j += 16) {
                   byte[] x = new byte[8]; byte[] y = new byte[8];
                   Array.Copy (allBytes, j, x, 0, 8);
                   Array.Copy (allBytes, j + 8, y, 0, 8);
-                  CustomPoint p = new (BitConverter.ToDouble (x), BitConverter.ToDouble (y));
+                  Point p = new (BitConverter.ToDouble (x), BitConverter.ToDouble (y));
                   scr.Points.Add (p);
                }
                all.Add (scr);
                break;
             case 2:
-               CustomLine line = new () {
-                  color = System.Text.Encoding.Default.GetString (color),
+               Line line = new () {
+                  Color = Encoding.Default.GetString (color),
                   Thickness = BitConverter.ToInt32 (thickness, 0)
                };
-               limits += 47;
-               for (int j = i + 15; j < limits; j += 32) {
+               limits += 48;
+               for (int j = i + 16; j < limits; j += 32) {
                   byte[] x1 = new byte[8]; byte[] y1 = new byte[8]; byte[] x2 = new byte[8]; byte[] y2 = new byte[8];
                   Array.Copy (allBytes, j, x1, 0, 8);
                   Array.Copy (allBytes, j + 8, y1, 0, 8);
                   Array.Copy (allBytes, j + 16, x2, 0, 8);
                   Array.Copy (allBytes, j + 24, y2, 0, 8);
-                  CustomPoint X = new (BitConverter.ToDouble (x1), BitConverter.ToDouble (y1));
-                  CustomPoint Y = new (BitConverter.ToDouble (x2), BitConverter.ToDouble (y2));
-                  line.X = X; line.Y = Y;
+                  Point X = new (BitConverter.ToDouble (x1), BitConverter.ToDouble (y1));
+                  Point Y = new (BitConverter.ToDouble (x2), BitConverter.ToDouble (y2));
+                  line.Points.Add (X); line.Points.Add (Y);
                }
                all.Add (line);
                break;
             case 3:
-               CustomRectangle rect = new () {
-                  color = System.Text.Encoding.Default.GetString (color),
+               Rectangle rect = new () {
+                  Color = Encoding.Default.GetString (color),
                   Thickness = BitConverter.ToInt32 (thickness, 0)
                };
-               limits += 47;
-               for (int j = i + 15; j < limits; j += 32) {
+               limits += 48;
+               for (int j = i + 16; j < limits; j += 32) {
                   byte[] startX = new byte[8]; byte[] startY = new byte[8]; byte[] endX = new byte[8]; byte[] endY = new byte[8];
                   Array.Copy (allBytes, j, startX, 0, 8);
                   Array.Copy (allBytes, j + 8, startY, 0, 8);
                   Array.Copy (allBytes, j + 16, endX, 0, 8);
                   Array.Copy (allBytes, j + 24, endY, 0, 8);
-                  CustomPoint X = new (BitConverter.ToDouble (startX), BitConverter.ToDouble (startY));
-                  CustomPoint Y = new (BitConverter.ToDouble (endX), BitConverter.ToDouble (endY));
-                  rect.mStartpoint = X; rect.mEndPoint = Y;
+                  Point X = new (BitConverter.ToDouble (startX), BitConverter.ToDouble (startY));
+                  Point Y = new (BitConverter.ToDouble (endX), BitConverter.ToDouble (endY));
+                  rect.Points.Add (X); rect.Points.Add (Y);
                }
                all.Add (rect);
                break;
             case 4:
-               CustomCircle circle = new () {
-                  color = System.Text.Encoding.Default.GetString (color),
+               Circle circle = new () {
+                  Color = Encoding.Default.GetString (color),
                   Thickness = BitConverter.ToInt32 (thickness, 0)
                };
-               limits += 39;
-               for (int j = i + 15; j < limits; j += 24) {
+               limits += 40;
+               for (int j = i + 16; j < limits; j += 24) {
                   byte[] centreX = new byte[8]; byte[] centreY = new byte[8]; byte[] radius = new byte[8];
                   Array.Copy (allBytes, j, centreX, 0, 8);
                   Array.Copy (allBytes, j + 8, centreY, 0, 8);
                   Array.Copy (allBytes, j + 16, radius, 0, 8);
-                  CustomPoint centre = new (BitConverter.ToDouble (centreX), BitConverter.ToDouble (centreY));
-                  circle.radius = BitConverter.ToDouble (radius, 0);
-                  circle.centre = centre;
+                  Point centre = new (BitConverter.ToDouble (centreX), BitConverter.ToDouble (centreY));
+                  circle.Radius = BitConverter.ToDouble (radius, 0);
+                  circle.Points.Add (centre);
                }
                all.Add (circle);
                break;
+            default:
+               throw new FormatException ("Input is not in correct format");
          }
       }
       return all;
    }
 
-   public bool SaveAs (List<Shapes> allShapes, bool IsText) {
+   public bool SaveAs (List<Shapes> allShapes, bool IsText, bool IsNewFile) {
       SaveFileDialog dialog = new () {
          Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin|All(*.*)|*",
          DefaultExt = IsText ? "*.txt" : "*.bin"
@@ -171,14 +177,13 @@ public class FileManager {
             foreach (var file in allShapes)
                newFile.Append (file.ToString ());
             File.WriteAllText (dialog.FileName, newFile.ToString ());
-            return true;
          } else {
             using (FileStream fs = new (dialog.FileName, FileMode.Create)) {
                BinaryWriter bw = new (fs);
                bw = BinaryWrite (ref bw, allShapes);
             }
-            return true;
          }
+         if (IsNewFile) { mCurrentFileName = dialog.FileName; return IsNewFile; }
       }
       return false;
    }
@@ -188,9 +193,7 @@ public class FileManager {
          switch (file) {
             case Scribble scr:
                bw.Write (1);
-               if (scr.color != null)
-                  foreach (char c in scr.color)
-                     bw.Write (c);
+               if (scr.Color != null) bw.Write (scr.Color);
                bw.Write (scr.Thickness);
                bw.Write (scr.Points.Count);
                foreach (var point in scr.Points) {
@@ -198,76 +201,71 @@ public class FileManager {
                   bw.Write (point.Y);
                }
                break;
-            case CustomLine line:
+            case Line line:
                bw.Write (2);
-               if (line.color != null)
-                  foreach (char c in line.color)
-                     bw.Write (c);
+               if (line.Color != null) bw.Write (line.Color);
                bw.Write (line.Thickness);
-               bw.Write (line.X.X);
-               bw.Write (line.X.Y);
-               bw.Write (line.Y.X);
-               bw.Write (line.Y.Y);
+               bw.Write (line.Points[0].X);
+               bw.Write (line.Points[0].Y);
+               bw.Write (line.Points[^1].X);
+               bw.Write (line.Points[^1].Y);
                break;
-            case CustomRectangle rect:
+            case Rectangle rect:
                bw.Write (3);
-               if (rect.color != null)
-                  foreach (char c in rect.color)
-                     bw.Write (c);
+               if (rect.Color != null) bw.Write (rect.Color);
                bw.Write (rect.Thickness);
-               bw.Write (rect.mStartpoint.X);
-               bw.Write (rect.mStartpoint.Y);
-               bw.Write (rect.mEndPoint.X);
-               bw.Write (rect.mEndPoint.Y);
+               bw.Write (rect.Points[0].X);
+               bw.Write (rect.Points[0].Y);
+               bw.Write (rect.Points[^1].X);
+               bw.Write (rect.Points[^1].Y);
                break;
-            case CustomCircle circle:
+            case Circle circle:
                bw.Write (4);
-               if (circle.color != null)
-                  foreach (char c in circle.color)
-                     bw.Write (c);
+               if (circle.Color != null) bw.Write (circle.Color);
                bw.Write (circle.Thickness);
-               bw.Write (circle.centre.X);
-               bw.Write (circle.centre.Y);
-               bw.Write (circle.radius);
+               bw.Write (circle.Points[0].X);
+               bw.Write (circle.Points[0].Y);
+               bw.Write (circle.Radius);
                break;
          }
       }
       return bw;
    }
 
-   public void SaveUntitled (List<Shapes> shapes) {
-      SaveFileDialog dialog = new () {
+   public bool SaveUntitled (List<Shapes> shapes) {
+      SaveFileDialog mSave = new () {
          FileName = "Untitled",
          Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin|All(*.*)|*",
+         InitialDirectory = "C:\\dineshn"
       };
-      StringBuilder newFile = new ();
-      dialog.InitialDirectory = "C:\\dineshn";
-      if (dialog.ShowDialog () == true) {
-         if (dialog.FilterIndex == 1) {
+      if (mSave.ShowDialog () == true) {
+         if (mSave.FilterIndex == 1) {
+            StringBuilder newFile = new ();
             foreach (var file in shapes)
                newFile.Append (file.ToString ());
-            File.WriteAllText (dialog.FileName, newFile.ToString ());
-         } else if (dialog.FilterIndex == 2) {
-            using (FileStream fs = new (dialog.FileName, FileMode.Create)) {
+            File.WriteAllText (mSave.FileName, newFile.ToString ());
+         } else if (mSave.FilterIndex == 2) {
+            using (FileStream fs = new (mSave.FileName, FileMode.Create)) {
                BinaryWriter bw = new (fs);
                bw = BinaryWrite (ref bw, shapes);
             }
          }
+         mCurrentFileName = mSave.FileName;
       }
+      return string.Join ("", mSave.FileName.TakeLast (3).ToArray ()) is "txt" or "bin";
    }
 
    public void Save (List<Shapes> allShapes) {
-      if (open != null) {
-         int i = open.FilterIndex;
-         if (i == 1) {
-            File.WriteAllText (open.FileName, string.Empty);
+      if (mCurrentFileName != null) {
+         string ext = string.Join ("", mCurrentFileName.TakeLast (3).ToArray ());
+         if (ext == "txt") {
+            File.WriteAllText (mCurrentFileName, "");
             StringBuilder newFile = new ();
             foreach (var file in allShapes)
                newFile.Append (file.ToString ());
-            File.WriteAllText (open.FileName, newFile.ToString ());
+            File.WriteAllText (mCurrentFileName, newFile.ToString ());
          } else {
-            using (FileStream fs = new (open.FileName, FileMode.Create)) {
-
+            using (FileStream fs = new (mCurrentFileName, FileMode.Create)) {
                BinaryWriter bw = new (fs);
                bw.Flush ();
                bw = BinaryWrite (ref bw, allShapes);
@@ -277,9 +275,7 @@ public class FileManager {
    }
    #endregion 
 
-   #region Private-----------
-   OpenFileDialog open = new () {
-      Filter = "Text Files(*.txt)|*.txt|BIN Files(*.bin)|*.bin"
-   };
+   #region Field---------------
+   public string mCurrentFileName = string.Empty;
    #endregion 
 }
