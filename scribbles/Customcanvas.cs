@@ -118,9 +118,8 @@ public partial class MyCanvas : Canvas {
                circle.Points.Add (new Point (e.GetPosition (this).X, e.GetPosition (this).Y));
                break;
          }
-         if (BackEnd.Colors.ShapeColor != null) mCurrentShape.Color = BackEnd.Colors.ShapeColor;
-         else mCurrentShape.Color = "#000000";
-         mCurrentShape.Thickness = mCurrentThickness.Count != 0 ? CurrentShapeThickness : 1;
+         mCurrentShape.Color = mCurrentShapeColor;
+         mCurrentShape.Thickness = mCurrentThickness;
          mShapes.Add (mCurrentShape);
       }
    }
@@ -180,16 +179,17 @@ public partial class MyCanvas : Canvas {
 
    public bool IsModified => mModified;
 
-   public Shapes CurrentShape => mCurrentShape;
+   public string CurrentShapeColor { set => mCurrentShapeColor = value; }
 
-   public int CurrentShapeThickness { get => mCurrentThickness.Peek (); set => mCurrentThickness.Push (value); }
+   public int CurrentShapeThickness { set => mCurrentThickness = value; }
 
    public int UndoShapeCount => mUndoShapes.Count;
    #endregion
 
    #region Private ------------
    private Shapes mCurrentShape = new Scribble ();
-   private Stack<int> mCurrentThickness = new ();
+   private int mCurrentThickness = 1;
+   private string mCurrentShapeColor = "#000000";
    private List<Shapes> mShapes = new ();
    private Stack<Shapes> mUndoShapes = new ();
    private bool mModified = false;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:scribbles"
         mc:Ignorable="d"
         Title="ColorPick" Height="100" Width="120"
-        WindowStyle="None">
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style x:Key="Btnstyle" TargetType="Button">
             <Setter  Property="Height" Value="30"/>

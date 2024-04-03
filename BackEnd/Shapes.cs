@@ -94,7 +94,3 @@ public struct Point {
 
    public override string ToString () => ($"{X},{Y}");
 }
-
-public static class Colors {
-   public static string? ShapeColor = default;
-}

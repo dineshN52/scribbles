@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:scribbles"
         mc:Ignorable="d"
-        Title="Scribble" MaxHeight="120" MinHeight="120" MaxWidth="400" MinWidth="400">
+        Title="Scribble" MaxHeight="120" MinHeight="120" MaxWidth="400" MinWidth="400" WindowStartupLocation="CenterOwner" 
+        ResizeMode="NoResize" WindowStyle="SingleBorderWindow">
     <Window.Resources>
         <Style x:Key="Btnstyle" TargetType="Button">
             <Setter Property="Height" Value="18"/>
-            <Setter Property="Width" Value="40"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Background" Value="White"/>
@@ -22,9 +22,9 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="Text" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Width="320">Do you want to save the changes to</TextBlock>
         <StackPanel Background="LightGray" Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="Yes" Content="Yes" Style="{StaticResource Btnstyle}" Margin="150,6,6,6" Click="Yes_Click"/>
-            <Button x:Name="No" Content="No" Style="{StaticResource Btnstyle}" Margin="6" Click="No_Click"/>
-            <Button x:Name="Cancel" Content="Cancel" Style="{StaticResource Btnstyle}" Margin="6" Click="Cancel_Click"/>
+            <Button x:Name="Yes" Content="Save" Width="40" Style="{StaticResource Btnstyle}" Margin="150,6,6,6" Click="Yes_Click"/>
+            <Button x:Name="No" Content="Don't Save" Width="65" Style="{StaticResource Btnstyle}" Margin="6" Click="No_Click"/>
+            <Button x:Name="Cancel" Content="Cancel" Width="40" Style="{StaticResource Btnstyle}" Margin="6" Click="Cancel_Click"/>
         </StackPanel>
     </Grid>
 </Window>

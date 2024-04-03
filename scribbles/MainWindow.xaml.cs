@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Media;
 
@@ -22,7 +23,7 @@ public partial class MainWindow : Window {
    protected override void OnRender (DrawingContext drawingContext) {
       base.OnRender (drawingContext);
       undo.IsEnabled = paintCanvas.IsModified;
-      redo.IsEnabled = paintCanvas.UndoShapeCount > 0;
+      redo.IsEnabled = paintCanvas.UndoShapeCount > 0 && paintCanvas.IsModified;
    }
    #endregion 
 
